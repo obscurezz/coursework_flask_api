@@ -2,3 +2,4 @@ venv
 .idea
 dev_project.db
 __pycache__
+project/__pycache__
