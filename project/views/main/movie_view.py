@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from flask import request, jsonify
+from flask import request
 
 from project.orm_models import Movie
 
@@ -8,9 +8,6 @@ from project.models import MovieModel
 
 
 movies_ns: Namespace = Namespace('movies', description='namespace for movies')
-#
-# movie_model = MovieModel()
-# movies_model = MovieModel(many=True)
 
 
 @movies_ns.route('/')
@@ -21,6 +18,24 @@ class AllMoviesView(Resource):
     """
     @staticmethod
     def get():
-        all_movies: list[Movie] = movie_service.get_all_movies()
-        validated_movies = [MovieModel.from_orm(movie) for movie in all_movies]
+        page = request.args['page']
+        status = request.args['status']
+
+        all_movies: list[Movie] = movie_service.get_all_movies(page=1)
+        validated_movies: list[dict] = [MovieModel.from_orm(movie).dict() for movie in all_movies]
         return validated_movies, 200
+
+
+@movies_ns.route('/<int:movie_id>')
+class SingleMovieView(Resource):
+    """
+    GET: implements GET-method for /movies/... where ... is ID of object
+    PUT: implements PUT-method to fully update object in database
+    DELETE: implements DELETE-method to delete object from database
+    """
+    @staticmethod
+    def get(movie_id: int):
+        current_movie: Movie = movie_service.get_movie_by_id(movie_id)
+        validated_movie: dict = MovieModel.from_orm(current_movie).dict()
+        return validated_movie, 200
+

@@ -12,25 +12,23 @@ directors_ns: Namespace = Namespace('directors', description='namespace for dire
 
 @directors_ns.route('/')
 class AllDirectorsView(Resource):
-    pass
     """
     GET: implements get request for all directors
     """
-#     @staticmethod
-#     def get():
-#         all_directors: list[Director] = director_service.get_all_directors()
-#         return directors_model.dump(all_directors), 200
-#
-#
-# @directors_ns.route('/<int:did>')
-# class SingleDirectorView(Resource):
-#     """
-#     GET: implements get request for exact director by its id
-#     """
-#     @staticmethod
-#     def get(did: int):
-#         current_director: Director = director_service.get_director_by_id(did)
-#         try:
-#             return director_model.dump(current_director)
-#         except Exception as e:
-#             return jsonify({'Exception': e}), 500
+    @staticmethod
+    def get():
+        all_directors: list[Director] = director_service.get_all_directors(page=1)
+        validated_directors: list[dict] = [DirectorModel.from_orm(director).dict() for director in all_directors]
+        return validated_directors, 200
+
+
+@directors_ns.route('/<int:director_id>')
+class SingleDirectorView(Resource):
+    """
+    GET: implements get request for exact director by its id
+    """
+    @staticmethod
+    def get(director_id: int):
+        current_director: Director = director_service.get_director_by_id(director_id)
+        validated_director: dict = DirectorModel.from_orm(current_director).dict()
+        return validated_director, 200
