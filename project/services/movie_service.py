@@ -12,10 +12,17 @@ class MovieService:
             return movie
         raise ItemNotFound(f'Movie with pk={pk} does not exists.')
 
-    def get_all_movies(self, page: int | None) -> list[Movie]:
-        return self.dao.select_all_items(page=page)
+    def get_all_movies(self, page: int | None = None, status: str | None = None) -> list[Movie]:
+        """
+        :param page: LIMIT OFFSET parameter
+        :param status: if status is NEW we order our statement by 'year' field
+        :return: select query with implemented parameters
+        """
+        if status == 'NEW':
+            return self.dao.select_all_items(page=page, order_field='year')
+        return self.dao.select_all_items(page=page, order_field=None)
 
-    def get_movie_by_query(self, page: int, **kwargs) -> list[Movie]:
+    def get_movie_by_query(self, page: int | None, **kwargs) -> list[Movie]:
         if not kwargs:
             return self.get_all_movies(page=page)
         else:

@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from flask import jsonify
+from flask import request
 
 from project.orm_models import Director
 
@@ -17,7 +17,9 @@ class AllDirectorsView(Resource):
     """
     @staticmethod
     def get():
-        all_directors: list[Director] = director_service.get_all_directors(page=1)
+        page: int = int(request.args.get('page'))
+
+        all_directors: list[Director] = director_service.get_all_directors(page=page)
         validated_directors: list[dict] = [DirectorModel.from_orm(director).dict() for director in all_directors]
         return validated_directors, 200
 

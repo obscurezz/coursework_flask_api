@@ -8,7 +8,7 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 class BaseConfig(object):
     # pagination
-    ITEMS_PER_PAGE = 10
+    ITEMS_PER_PAGE = 12
 
     # os
     SECRET_KEY = os.urandom(12)

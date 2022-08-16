@@ -23,8 +23,18 @@ class BaseDAO(Generic[T]):
     def select_item_by_pk(self, pk: int) -> Optional[T]:
         return self._db_session.query(self.__model__).get(pk)
 
-    def select_all_items(self, page: Optional[int] = None) -> list[T]:
-        stmt: BaseQuery = self._db_session.query(self.__model__)
+    def select_all_items(self, page: int | None, order_field: str | None) -> list[T]:
+        """
+        :param page: if page is not None, we create all rows statement, if page exists we return LIMIT "page"
+        :param order_field: if order field is not None, we create select query with order by "order_field" desc
+        :return: resulted statement with all parameters implemented
+        """
+        if order_field:
+            stmt: BaseQuery = self._db_session.query(self.__model__).order_by(
+                getattr(self.__model__, order_field).desc())
+        else:
+            stmt: BaseQuery = self._db_session.query(self.__model__)
+
         if page:
             try:
                 return stmt.paginate(page, self._items_per_page).items

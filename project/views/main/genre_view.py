@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from flask import jsonify
+from flask import request
 
 from project.orm_models import Genre
 
@@ -16,7 +16,9 @@ class AllGenresView(Resource):
     """
     @staticmethod
     def get():
-        all_genres: list[Genre] = genre_service.get_all_genres(page=1)
+        page: int = int(request.args.get('page'))
+
+        all_genres: list[Genre] = genre_service.get_all_genres(page=page)
         validated_genres: list[dict] = [GenreModel.from_orm(genre).dict() for genre in all_genres]
         return validated_genres, 200
 

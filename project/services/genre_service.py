@@ -13,4 +13,4 @@ class GenreService:
         raise ItemNotFound(f'Genre with pk={pk} not exists.')
 
     def get_all_genres(self, page: int | None) -> list[Genre]:
-        return self.dao.select_all_items(page=page)
+        return self.dao.select_all_items(page=page, order_field=None)

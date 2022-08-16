@@ -22,7 +22,6 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
     # init app
     db.init_app(app)
     api.init_app(app)
-
     # error handler
     app.register_error_handler(BaseServiceError, base_service_error_handler)
 
