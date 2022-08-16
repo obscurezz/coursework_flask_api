@@ -58,25 +58,35 @@ class BaseDAO(Generic[T]):
         validated_items: list[dict] = [self.__valid__.from_orm(item).dict() for item in items]
         return validated_items
 
-    def insert_item(self, **kwargs) -> Optional[T]:
-        new_item: Optional[T] = self.__model__(**kwargs)
+    def insert_item(self, **kwargs) -> Optional[T] | dict:
+        try:
+            new_item: BaseModel = self.__valid__(**kwargs)
+        except TypeError as e:
+            return {'Exception': e}
+
+        new_object: Optional[T] = self.__model__(**new_item.dict())
 
         with self._db_session.begin():
-            self._db_session.add(new_item)
+            self._db_session.add(new_object)
             self._db_session.commit()
 
-        return new_item
+        return new_object
 
-    def update_item_by_pk(self, pk: int, **kwargs) -> Optional[T]:
-        update_item: Optional[T] = self._db_session.query(self.__model__).get(pk)
-        for k, v in kwargs.items():
-            setattr(update_item, k, v)
+    def update_item_by_pk(self, pk: int, **kwargs) -> Optional[T] | dict:
+        try:
+            update_item: BaseModel = self.__valid__(**kwargs)
+        except TypeError as e:
+            return {'Exception': e}
+
+        update_object: Optional[T] = self._db_session.query(self.__model__).get(pk)
+        for k, v in update_item.dict().items():
+            setattr(update_object, k, v)
 
         with self._db_session.begin():
-            self._db_session.add(update_item)
+            self._db_session.add(update_object)
             self._db_session.commit()
 
-        return update_item
+        return update_object
 
     def delete_item_by_pk(self, pk: int) -> Optional[T]:
         delete_item: Optional[T] = self._db_session.query(self.__model__).get(pk)

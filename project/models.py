@@ -1,8 +1,9 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
 class MovieModel(BaseModel):
-    id: int
+    id: Optional[int]
     title: str
     description: str
     trailer: str
@@ -16,7 +17,7 @@ class MovieModel(BaseModel):
 
 
 class GenreModel(BaseModel):
-    id: int
+    id: Optional[int]
     name: str
 
     class Config:
@@ -24,7 +25,7 @@ class GenreModel(BaseModel):
 
 
 class DirectorModel(BaseModel):
-    id: int
+    id: Optional[int]
     name: str
 
     class Config:
@@ -32,7 +33,7 @@ class DirectorModel(BaseModel):
 
 
 class UserModel(BaseModel):
-    id: int
+    id: Optional[int]
     email: EmailStr
     password: str
     first_name: str
