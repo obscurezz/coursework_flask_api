@@ -11,7 +11,7 @@ example: _set_environ('DEV')
 ```
 * DEV environment
 ```
-FLASK_APP=app.py
+FLASK_APP=run.py
 FLASK_ENV=development
 FLASK_DEBUG=1
 ```

@@ -50,3 +50,15 @@ class User(BaseORM):
     __table_args__ = (
         CheckConstraint("email REGEXP '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'"),
     )
+
+
+class UserFavorites(BaseORM):
+    __tablename__ = 'user_favorites'
+
+    user_id = Column(Integer, nullable=False)
+    movie_id = Column(Integer, nullable=False)
+
+    __table_args__ = (
+        ForeignKeyConstraint((user_id,), (User.id,), onupdate='CASCADE', ondelete='CASCADE'),
+        ForeignKeyConstraint((movie_id,), (Movie.id,), onupdate='CASCADE', ondelete='CASCADE'),
+    )

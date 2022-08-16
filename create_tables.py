@@ -11,6 +11,7 @@ if __name__ == '__main__':
     _set_environ("DEV")
     with create_app(app_config).app_context():
         try:
+            db.drop_all()
             db.create_all()
         except OperationalError as e:
             print(f'OperationalError: {e.orig}')
