@@ -15,6 +15,10 @@ FLASK_APP=run.py
 FLASK_ENV=development
 FLASK_DEBUG=1
 ```
+* Creating security settings
+```
+python create_security.py
+```
 * Creating (recreating) tables and filling them with test data
 ```
 python create_tables.py

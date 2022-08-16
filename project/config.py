@@ -1,12 +1,19 @@
 import os
 from pathlib import Path
 from typing import Type
+from project.utils import read_json_file
 
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
+SECURITY_SETTINGS: dict = read_json_file(BASE_DIR.joinpath('security.json').as_posix())
 
 
 class BaseConfig(object):
+    # security
+    PWD_SALT = SECURITY_SETTINGS['PWD_SALT']
+    PWD_HASH_NAME = SECURITY_SETTINGS['PWD_HASH_NAME']
+    PWD_HASH_ITERATIONS = SECURITY_SETTINGS['PWD_HASH_ITERATIONS']
+
     # pagination
     ITEMS_PER_PAGE = 12
 

@@ -37,7 +37,7 @@ class UserModel(BaseModel):
     password: str
     first_name: str
     last_name: str
-    favorite_genre: str
+    favorite_genre: str | None
 
     class Config:
         orm_mode = True
