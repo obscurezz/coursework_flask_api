@@ -1,22 +1,9 @@
-from pydantic import BaseModel, EmailStr
-
-
-class MovieModel(BaseModel):
-    id: int
-    title: str
-    description: str
-    trailer: str
-    year: int
-    rating: float
-    genre_id: int
-    director_id: int
-
-    class Config:
-        orm_mode = True
+from typing import Optional
+from pydantic import BaseModel, EmailStr, Field
 
 
 class GenreModel(BaseModel):
-    id: int
+    id: Optional[int]
     name: str
 
     class Config:
@@ -24,20 +11,38 @@ class GenreModel(BaseModel):
 
 
 class DirectorModel(BaseModel):
-    id: int
+    id: Optional[int]
     name: str
 
     class Config:
         orm_mode = True
 
 
+class MovieModel(BaseModel):
+    id: Optional[int]
+    title: str
+    description: str
+    trailer: str = Field(regex='(http|https)://', description='should be a link')
+    year: int = Field(gt=1700)
+    rating: float = Field(ge=0, le=10)
+    genre_id: int
+    director_id: int
+
+    director: DirectorModel | None
+    genre: GenreModel | None
+
+    class Config:
+        orm_mode = True
+
+
 class UserModel(BaseModel):
-    id: int
+    id: Optional[int]
     email: EmailStr
-    password: str
+    password: str = Field(regex='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                          description='8 chars, must contain at least 1 digit, 1 upper, 1 lower, 1 special')
     first_name: str
     last_name: str
-    favorite_genre: str
+    favorite_genre: str | None
 
     class Config:
         orm_mode = True

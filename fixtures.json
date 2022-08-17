@@ -356,5 +356,14 @@
 			"name": "Мюзикл",
 			"pk": 18
 		}
+	],
+	"users": [
+		{
+			"email": "example@test.com",
+			"pk": 1,
+			"first_name": "Bob",
+			"last_name": "Odenkirk",
+			"password": "i3100qR3sf#n"
+		}
 	]
 }

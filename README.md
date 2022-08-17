@@ -5,19 +5,23 @@
 ```
 pip install -r requirements.txt
 ```
-* _set_environ func can take values DEV|TEST|PROD
-```
-example: _set_environ('DEV')
-```
 * DEV environment
 ```
 FLASK_APP=run.py
 FLASK_ENV=development
 FLASK_DEBUG=1
 ```
-* Creating (recreating) tables and filling them with test data
+* Creating security settings
+```
+python create_security.py
+```
+* Creating (recreating) tables
 ```
 python create_tables.py
+```
+* Creating test data with fixtures
+```
+python load_fixtures.py
 ```
 * Launching the application
 ```
