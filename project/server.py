@@ -8,7 +8,7 @@ from project.setup.api import api
 from project.setup.db import db
 
 from project.config import BaseConfig
-from project.views import movies_ns, genres_ns, directors_ns
+from project.views import movies_ns, genres_ns, directors_ns, users_ns
 
 
 def base_service_error_handler(exception: BaseServiceError):
@@ -27,6 +27,7 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
     api.add_namespace(genres_ns)
     api.add_namespace(directors_ns)
     api.add_namespace(movies_ns)
+    api.add_namespace(users_ns)
 
     # error handler
     app.register_error_handler(BaseServiceError, base_service_error_handler)

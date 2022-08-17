@@ -28,3 +28,16 @@ movie: Model = api.model('Movie', {
     'genre': fields.Nested(genre, required=True),
     'director': fields.Nested(director, required=True)
 })
+
+user_profile: Model = api.model('User', {
+    'id': fields.Integer(required=True),
+    'email': fields.String(required=True),
+    'first_name': fields.String(required=True),
+    'last_name': fields.String(required=True),
+    'favorite_genre': fields.String
+})
+
+token: Model = api.model('Access/Refresh token',{
+    'access_token': fields.String(required=True),
+    'refresh_token': fields.String(required=True),
+})

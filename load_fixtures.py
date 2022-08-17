@@ -3,7 +3,7 @@ from contextlib import suppress
 from sqlalchemy.exc import IntegrityError
 
 from project.config import app_config
-from project.orm_models import Director, Genre, Movie
+from project.orm_models import Director, Genre, Movie, User
 from project.server import create_app
 from project.setup.db import db
 from project.utils import read_json_file, load_data
@@ -18,6 +18,7 @@ if __name__ == '__main__':
         load_data(data['directors'], Director)
         load_data(data['genres'], Genre)
         load_data(data['movies'], Movie)
+        load_data(data['users'], User)
         try:
             db.session.commit()
         except IntegrityError as e:

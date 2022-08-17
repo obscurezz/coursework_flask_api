@@ -42,13 +42,13 @@ class User(BaseORM):
     __tablename__ = 'users'
 
     email = Column(VARCHAR(200), unique=True, nullable=False)
-    password = Column(VARCHAR(64), nullable=False)
+    password = Column(VARCHAR(255), nullable=False)
     first_name = Column(VARCHAR(100), nullable=False)
     last_name = Column(VARCHAR(100), nullable=False)
     favorite_genre = Column(VARCHAR(100))
 
     __table_args__ = (
-        CheckConstraint("email REGEXP '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'"),
+        CheckConstraint("email LIKE '%___@___%.__%'"),
     )
 
 

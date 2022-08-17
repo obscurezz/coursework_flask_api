@@ -2,20 +2,6 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
 
-class MovieModel(BaseModel):
-    id: Optional[int]
-    title: str
-    description: str
-    trailer: str = Field(regex='(http|https)://', description='should be a link')
-    year: int = Field(gt=1700)
-    rating: float = Field(ge=0, le=10)
-    genre_id: int
-    director_id: int
-
-    class Config:
-        orm_mode = True
-
-
 class GenreModel(BaseModel):
     id: Optional[int]
     name: str
@@ -27,6 +13,23 @@ class GenreModel(BaseModel):
 class DirectorModel(BaseModel):
     id: Optional[int]
     name: str
+
+    class Config:
+        orm_mode = True
+
+
+class MovieModel(BaseModel):
+    id: Optional[int]
+    title: str
+    description: str
+    trailer: str = Field(regex='(http|https)://', description='should be a link')
+    year: int = Field(gt=1700)
+    rating: float = Field(ge=0, le=10)
+    genre_id: int
+    director_id: int
+
+    director: DirectorModel | None
+    genre: GenreModel | None
 
     class Config:
         orm_mode = True

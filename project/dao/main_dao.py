@@ -28,3 +28,10 @@ class DirectorDAO(BaseDAO[Director]):
 class UserDAO(BaseDAO[User]):
     __model__: Type[User] = User
     __valid__: Type[BaseModel] = UserModel
+
+    def select_item_by_pk(self, pk: int) -> dict:
+        selected_user: User = self._db_session.query(self.__model__).get(pk)
+        validated_user: dict = self.__valid__.from_orm(selected_user).dict()
+        del validated_user['password']
+
+        return validated_user
