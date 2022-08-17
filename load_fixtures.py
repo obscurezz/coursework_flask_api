@@ -1,5 +1,3 @@
-from contextlib import suppress
-
 from sqlalchemy.exc import IntegrityError
 
 from project.config import app_config
@@ -25,6 +23,3 @@ if __name__ == '__main__':
             print(f'IntegrityError: {e.orig}')
         finally:
             db.session.close()
-
-        with suppress(IntegrityError):
-            db.session.commit()

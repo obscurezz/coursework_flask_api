@@ -1,7 +1,7 @@
-from pydantic import EmailStr
+from pydantic import EmailStr, ValidationError
 
 from project.dao.main_dao import UserDAO
-from project.exceptions import BaseServiceError, ItemNotFound
+from project.exceptions import ItemNotFound
 from project.models import UserModel
 from project.orm_models import User
 
@@ -34,5 +34,5 @@ class UserService:
         try:
             new_user: User = self.dao.insert_item(**user_model.dict())
             return {'operation': 'success', 'id': new_user.id, 'email': new_user.email}
-        except BaseServiceError as e:
-            return {'operation': 'failed', 'text': e, 'code': BaseServiceError.code}
+        except ValidationError as ve:
+            return {'operation': 'failed', 'text': ve}

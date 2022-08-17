@@ -5,7 +5,7 @@ import jwt
 from flask import current_app
 
 
-def __generate_tokens(data: dict) -> dict:
+def _generate_tokens(data: dict) -> dict:
     min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
     data['exp'] = calendar.timegm(min30.timetuple())
     access_token = jwt.encode(data, current_app.config['SECRET_KEY'], algorithm='HS256')
