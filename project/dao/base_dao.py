@@ -73,16 +73,16 @@ class BaseDAO(Generic[T]):
         return new_object
 
     def update_item_by_pk(self, pk: int, **kwargs) -> Optional[T] | dict:
-        try:
-            update_item: BaseModel = self.__valid__(**kwargs)
-        except TypeError as e:
-            return {'Exception': e}
+        # try:
+        #     update_item: BaseModel = self.__valid__(**kwargs)
+        # except TypeError as e:
+        #     return {'Exception': e}
 
         update_object: Optional[T] = self._db_session.query(self.__model__).get(pk)
-        for k, v in update_item.dict().items():
+        for k, v in kwargs.items():
             setattr(update_object, k, v)
 
-        with self._db_session.begin():
+        with self._db_session.begin(subtransactions=True):
             self._db_session.add(update_object)
             self._db_session.commit()
 

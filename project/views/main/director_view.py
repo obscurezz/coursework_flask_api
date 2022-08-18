@@ -17,6 +17,9 @@ class AllDirectorsView(Resource):
     @directors_ns.expect(page_parser)
     @directors_ns.marshal_with(director, as_list=True, code=200, description='OK')
     def get():
+        """
+        all directors with pagination
+        """
         all_directors: list[dict] = director_service.get_all_directors(**page_parser.parse_args())
         return all_directors, 200
 
@@ -31,5 +34,8 @@ class SingleDirectorView(Resource):
     @directors_ns.response(404, 'Not found', error)
     @directors_ns.marshal_with(director, code=200, description='OK')
     def get(director_id: int):
+        """
+        exact director by its id
+        """
         current_director: dict = director_service.get_director_by_id(director_id)
         return current_director, 200

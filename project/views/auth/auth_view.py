@@ -14,6 +14,9 @@ class LoginAuthView(Resource):
     @auth_ns.marshal_with(token, code=200, description='OK')
     @auth_ns.response(code=400, description='Bad request', model=error)
     def post():
+        """
+        logins with user/password pair, returns two JWT tokens
+        """
         tokens = auth_service._generate_tokens(**auth_parser.parse_args())
         return tokens, 201
 
@@ -21,6 +24,9 @@ class LoginAuthView(Resource):
     @auth_ns.expect(tokens_parser)
     @auth_ns.marshal_with(token, code=200, description='OK')
     def put():
+        """
+        gets JWT tokens pair, returns updated one
+        """
         return auth_service._approve_refresh_token(tokens_parser.parse_args()['refresh_token']), 201
 
 
@@ -32,5 +38,8 @@ class RegisterAuthView(Resource):
     @auth_ns.response(code=400, description='Bad request', model=error)
     @auth_ns.response(code=409, description='Already exists', model=error)
     def post():
+        """
+        creates new user in database
+        """
         new_user = user_service.post_new_user(**new_user_parser.parse_args())
         return new_user, 201

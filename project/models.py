@@ -48,3 +48,8 @@ class UserModel(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class TokenModel(BaseModel):
+    access_token: str = Field(regex='(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)')
+    refresh_token: str = Field(regex='(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)')

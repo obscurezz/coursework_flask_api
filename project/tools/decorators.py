@@ -18,6 +18,6 @@ def auth_required(func: Callable):
             abort(401)
             return {'Exception': e}
 
-        return func(current_user, *args, **kwargs)
+        return func(username=current_user['username'], *args, **kwargs)
 
     return decorator

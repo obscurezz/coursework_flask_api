@@ -17,6 +17,9 @@ class AllGenresView(Resource):
     @genres_ns.expect(page_parser)
     @genres_ns.marshal_with(genre, as_list=True, code=200, description='OK')
     def get():
+        """
+        all genres with pagination
+        """
         all_genres: list[dict] = genre_service.get_all_genres(**page_parser.parse_args())
         return all_genres, 200
 
@@ -31,5 +34,8 @@ class SingleGenreView(Resource):
     @genres_ns.response(404, 'Not found', error)
     @genres_ns.marshal_with(genre, code=200, description='OK')
     def get(genre_id: int):
+        """
+        exact genre by its id
+        """
         current_genre: dict = genre_service.get_genre_by_id(genre_id)
         return current_genre, 200

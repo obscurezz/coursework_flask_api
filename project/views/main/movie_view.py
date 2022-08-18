@@ -18,6 +18,9 @@ class AllMoviesView(Resource):
     @movies_ns.expect(movie_status_and_page_parser)
     @movies_ns.marshal_with(movie, as_list=True, code=200, description='OK')
     def get():
+        """
+        all movies with pagination
+        """
         all_movies: list[dict] = movie_service.get_all_movies(**movie_status_and_page_parser.parse_args())
         return all_movies, 200
 
@@ -34,5 +37,8 @@ class SingleMovieView(Resource):
     @movies_ns.response(404, 'Not found', error)
     @movies_ns.marshal_with(movie, code=200, description='OK')
     def get(movie_id: int):
+        """
+        exact movie by its id
+        """
         current_movie: dict = movie_service.get_movie_by_id(movie_id)
         return current_movie, 200

@@ -41,5 +41,11 @@ class UserDAO(BaseDAO[User]):
         return validated_user
 
     def update_item_password(self, pk: int, new_password: str) -> dict:
-        updated_user: dict = self.update_item_by_pk(pk, password=new_password)
-        return updated_user
+        current_user: User = self._db_session.query(self.__model__).get(pk)
+        current_user.password = new_password
+        with self._db_session.begin(subtransactions=True):
+            self._db_session.add(current_user)
+            self._db_session.commit()
+
+        validated_user: dict = self.__valid__.from_orm(current_user).dict()
+        return validated_user
