@@ -18,7 +18,7 @@ class BaseConfig(object):
     ITEMS_PER_PAGE = 12
 
     # os
-    SECRET_KEY = os.urandom(12)
+    SECRET_KEY = b'm=+Y(L1!idBB'
 
     # json
     RESTX_JSON = {'ensure_ascii': False}

@@ -32,6 +32,14 @@ class UserDAO(BaseDAO[User]):
     def select_item_by_pk(self, pk: int) -> dict:
         selected_user: User = self._db_session.query(self.__model__).get(pk)
         validated_user: dict = self.__valid__.from_orm(selected_user).dict()
-        del validated_user['password']
 
         return validated_user
+
+    def select_unique_item_by_arguments(self, **kwargs) -> dict:
+        selected_user: User = self._db_session.query(self.__model__).filter_by(**kwargs).one()
+        validated_user: dict = self.__valid__.from_orm(selected_user).dict()
+        return validated_user
+
+    def update_item_password(self, pk: int, new_password: str) -> dict:
+        updated_user: dict = self.update_item_by_pk(pk, password=new_password)
+        return updated_user

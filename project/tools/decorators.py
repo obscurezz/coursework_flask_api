@@ -13,11 +13,11 @@ def auth_required(func: Callable):
         token = auth_data.split('Bearer ')[-1]
 
         try:
-            jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+            current_user = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
         except jwt.exceptions.DecodeError as e:
             abort(401)
             return {'Exception': e}
 
-        return func(*args, **kwargs)
+        return func(current_user, *args, **kwargs)
 
     return decorator

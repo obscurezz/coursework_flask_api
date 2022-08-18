@@ -12,9 +12,18 @@ auth_parser.add_argument(name='email', type=email(), required=True, nullable=Fal
 auth_parser.add_argument(name='password', type=str, required=True, nullable=False)
 
 change_password_parser: RequestParser = RequestParser()
-auth_parser.add_argument(name='old_password', type=str, required=True, nullable=False)
-auth_parser.add_argument(name='new_password', type=str, required=True, nullable=False)
+change_password_parser.add_argument(name='old_password', type=str, required=True, nullable=False)
+change_password_parser.add_argument(name='new_password', type=str, required=True, nullable=False)
 
 tokens_parser: RequestParser = RequestParser()
-auth_parser.add_argument(name='access_token', type=str, required=True)
-auth_parser.add_argument(name='refresh_token', type=str, required=True)
+tokens_parser.add_argument(name='access_token', type=str, required=True)
+tokens_parser.add_argument(name='refresh_token', type=str, required=True)
+
+new_user_parser: RequestParser = auth_parser.copy()
+new_user_parser.add_argument(name='first_name', type=str, required=True, nullable=False)
+new_user_parser.add_argument(name='last_name', type=str, required=True, nullable=False)
+
+update_user_parser: RequestParser = RequestParser()
+update_user_parser.add_argument(name='first_name', type=str, required=True, nullable=False)
+update_user_parser.add_argument(name='last_name', type=str, required=True, nullable=False)
+update_user_parser.add_argument(name='favorite_genre', type=int, required=False, nullable=True)

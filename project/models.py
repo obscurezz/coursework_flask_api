@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -38,11 +39,12 @@ class MovieModel(BaseModel):
 class UserModel(BaseModel):
     id: Optional[int]
     email: EmailStr
-    password: str = Field(regex='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-                          description='8 chars, must contain at least 1 digit, 1 upper, 1 lower, 1 special')
+    password: str
+        # = Field(regex='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+        #                   description='8 chars, must contain at least 1 digit, 1 upper, 1 lower, 1 special')
     first_name: str
     last_name: str
-    favorite_genre: str | None
+    favorite_genre: GenreModel | None
 
     class Config:
         orm_mode = True
