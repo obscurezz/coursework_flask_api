@@ -15,6 +15,11 @@ class FavoritesView(Resource):
     @favorites_ns.marshal_with(favorite_model, code=200, description='OK')
     @auth_required
     def post(username, movie_id: int):
+        """
+        :param username: is an email from token
+        :param movie_id: id of movie adding to favorites
+        adds new favorite
+        """
         user: dict = user_service.get_user_by_email_and_password(email=username)
         user_id: int = user['id']
 
@@ -26,6 +31,11 @@ class FavoritesView(Resource):
     @favorites_ns.response(401, 'Not authorized', error)
     @auth_required
     def delete(username, movie_id: int):
+        """
+        :param username: is an email from token
+        :param movie_id: id of movie deleting from favorites
+        deletes the favorite
+        """
         user: dict = user_service.get_user_by_email_and_password(email=username)
         user_id: int = user['id']
 

@@ -17,6 +17,7 @@ class SingleUserView(Resource):
     @auth_required
     def get(username):
         """
+        :param username: is an email from token
         returns user info for authorized user
         """
         user: dict = user_service.get_user_by_email_and_password(email=username)
@@ -30,6 +31,7 @@ class SingleUserView(Resource):
     @auth_required
     def patch(username):
         """
+        :param username: is an email from token
         updates user info for authorized user
         """
         user: dict = user_service.get_user_by_email_and_password(email=username)
@@ -49,6 +51,7 @@ class PasswordUserView(Resource):
     @auth_required
     def put(username):
         """
+        :param username: is an email from token
         changes user password for authorized user
         """
         user: dict = user_service.get_user_by_email_and_password(email=username)
