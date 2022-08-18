@@ -56,7 +56,7 @@ class TokenModel(BaseModel):
 
 
 class UserFavoritesModel(BaseModel):
-    id: int | None
+    id: Optional[int]
     user_id: int
     movie_id: int
 

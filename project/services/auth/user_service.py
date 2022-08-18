@@ -18,6 +18,12 @@ class UserService:
         raise ItemNotFound(f'User with username with id={pk} not exists.')
 
     def get_user_by_email_and_password(self, email: str, password: str | None = None) -> dict:
+        """
+        finds by password only for login event, for refreshing only email needed
+        :param email: username
+        :param password: password for login or None type
+        :return: exact user
+        """
         if password:
             hash_password = generate_password_hash(password)
             user = self.dao.select_unique_item_by_arguments(email=email, password=hash_password)
@@ -33,12 +39,17 @@ class UserService:
         return user
 
     def post_new_user(self, email: EmailStr, password: str, first_name: str, last_name: str):
+        """
+        :params: all required fields
+        :return: new user
+        """
         user_model: UserModel = UserModel(
             email=email,
             password=password,
             first_name=first_name,
             last_name=last_name
         )
+        # hashing user password and changing it in model
         hashpwd = generate_password_hash(user_model.password)
         user_model.password = hashpwd
         try:
@@ -48,9 +59,17 @@ class UserService:
             return {'operation': 'failed', 'text': ve}
 
     def put_user_new_password(self, pk: int, old_password: str, new_password: str):
+        """
+        :param pk: users id
+        :param old_password: old password
+        :param new_password: new password
+        :return: user with updated password
+        """
         current_user = self.get_user_by_id(pk)
+        # check if password is correct
         if compose_passwords(current_user['password'], old_password):
             new_hashpwd = generate_password_hash(new_password)
+            # if user password equals to previous one returns fail message
             if current_user['password'] == new_hashpwd:
                 return {'operation': 'failed', 'message': 'password is the same with previous one'}
             self.dao.update_item_password(pk, new_hashpwd)

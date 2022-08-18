@@ -61,6 +61,11 @@ class BaseDAO(Generic[T]):
         return validated_items
 
     def insert_item(self, **kwargs) -> Optional[T] | dict:
+        """
+        :param kwargs: all keywords which have to be implemented to new object
+        :return: validated new object
+        """
+        # validate input rows with pydantic model
         try:
             new_item: BaseModel = self.__valid__(**kwargs)
         except TypeError as e:

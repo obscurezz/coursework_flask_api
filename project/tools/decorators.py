@@ -5,6 +5,10 @@ from flask import request, abort, current_app
 
 
 def auth_required(func: Callable):
+    """
+    decorates CBV method with JWT token checking
+    :param func: CBV method that we are checking for authorization needed
+    """
     def decorator(*args, **kwargs):
         if 'Authorization' not in request.headers:
             abort(401)
