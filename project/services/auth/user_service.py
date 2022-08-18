@@ -51,6 +51,8 @@ class UserService:
         current_user = self.get_user_by_id(pk)
         if compose_passwords(current_user['password'], old_password):
             new_hashpwd = generate_password_hash(new_password)
+            if current_user['password'] == new_hashpwd:
+                return {'operation': 'failed', 'message': 'password is the same with previous one'}
             self.dao.update_item_password(pk, new_hashpwd)
             return {'operation': 'success', 'id': current_user['id'], 'info': 'password changed'}
         return {'operation': 'failed'}

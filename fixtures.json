@@ -363,7 +363,8 @@
 			"pk": 1,
 			"first_name": "Bob",
 			"last_name": "Odenkirk",
-			"password": "i3100qR3sf#n"
+			"password": "i3100qR3sf#n",
+			"favorite_genre": 4
 		}
 	]
 }

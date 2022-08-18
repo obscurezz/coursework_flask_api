@@ -47,7 +47,10 @@ class User(BaseORM):
     last_name = Column(VARCHAR(100), nullable=False)
     favorite_genre = Column(Integer, nullable=True)
 
+    genre = relationship("Genre")
+
     __table_args__ = (
+        ForeignKeyConstraint((favorite_genre,), (Genre.id,), onupdate='CASCADE', ondelete='CASCADE'),
         CheckConstraint("email LIKE '%___@___%.__%'"),
     )
 

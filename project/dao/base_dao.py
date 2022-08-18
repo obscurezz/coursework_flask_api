@@ -28,6 +28,7 @@ class BaseDAO(Generic[T]):
 
     def select_item_by_pk(self, pk: int) -> dict:
         item: Optional[T] = self._db_session.query(self.__model__).get(pk)
+        self._db_session.close()
         validated_item: dict = self.__valid__.from_orm(item).dict()
         return validated_item
 
@@ -54,6 +55,7 @@ class BaseDAO(Generic[T]):
                 return []
         # list of all ORM objects
         items: list[Optional[T]] = stmt.all()
+        self._db_session.close()
         # validate them with pydantic model
         validated_items: list[dict] = [self.__valid__.from_orm(item).dict() for item in items]
         return validated_items
@@ -82,7 +84,7 @@ class BaseDAO(Generic[T]):
         for k, v in kwargs.items():
             setattr(update_object, k, v)
 
-        with self._db_session.begin(subtransactions=True):
+        with self._db_session.begin():
             self._db_session.add(update_object)
             self._db_session.commit()
 

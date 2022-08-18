@@ -53,3 +53,12 @@ class UserModel(BaseModel):
 class TokenModel(BaseModel):
     access_token: str = Field(regex='(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)')
     refresh_token: str = Field(regex='(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)')
+
+
+class UserFavoritesModel(BaseModel):
+    id: int | None
+    user_id: int
+    movie_id: int
+
+    class Config:
+        orm_mode = True
