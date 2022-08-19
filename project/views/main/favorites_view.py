@@ -16,8 +16,6 @@ class FavoritesView(Resource):
     @auth_required
     def post(username, movie_id: int):
         """
-        :param username: is an email from token
-        :param movie_id: id of movie adding to favorites
         adds new favorite
         """
         user: dict = user_service.get_user_by_email_and_password(email=username)
@@ -32,8 +30,6 @@ class FavoritesView(Resource):
     @auth_required
     def delete(username, movie_id: int):
         """
-        :param username: is an email from token
-        :param movie_id: id of movie deleting from favorites
         deletes the favorite
         """
         user: dict = user_service.get_user_by_email_and_password(email=username)
