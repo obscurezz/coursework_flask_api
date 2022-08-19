@@ -45,6 +45,18 @@ flask run
 `/directors/` returns all directors   
 `/directors/1` returns single director by id
 ***
-```
-WORK IN PROGRESS...
-```
+`/user/`    
+* GET: returns user info for authorized user
+* PATCH: updates user info
+
+`/user/password` changes user's password
+***
+`/auth/login`
+* POST: login with user/password pair, return's JWT tokens pair
+* PUT: updates JWT tokens
+
+`/auth/register` creates new user in the database
+***
+`/favorites/movies/1`
+* POST: adds favorite for user
+* DELETE: deletes favorite for user

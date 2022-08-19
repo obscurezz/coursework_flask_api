@@ -41,3 +41,9 @@ token: Model = api.model('Access/Refresh token',{
     'access_token': fields.String(required=True),
     'refresh_token': fields.String(required=True),
 })
+
+favorite_model: Model = api.model('Favorite',{
+    'id': fields.Integer(required=True),
+    'user': fields.Nested(user_profile, required=True),
+    'movie': fields.Nested(movie, required=True),
+})

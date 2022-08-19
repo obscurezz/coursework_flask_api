@@ -4,9 +4,11 @@ from flask import current_app
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy.orm import scoped_session
 from werkzeug.exceptions import NotFound
+from pydantic import ValidationError
 
 from project.setup.db.base_model import BaseORM
 from project.models import BaseModel
+from project.tools.decorators import dao_exceptions
 
 T = TypeVar('T', bound=BaseORM)
 
@@ -26,8 +28,10 @@ class BaseDAO(Generic[T]):
     def _items_per_page(self) -> int:
         return current_app.config['ITEMS_PER_PAGE']
 
-    def select_item_by_pk(self, pk: int) -> dict:
+    @dao_exceptions
+    def select_item_by_pk(self, pk: int) -> dict | None:
         item: Optional[T] = self._db_session.query(self.__model__).get(pk)
+        self._db_session.close()
         validated_item: dict = self.__valid__.from_orm(item).dict()
         return validated_item
 
@@ -54,14 +58,20 @@ class BaseDAO(Generic[T]):
                 return []
         # list of all ORM objects
         items: list[Optional[T]] = stmt.all()
+        self._db_session.close()
         # validate them with pydantic model
         validated_items: list[dict] = [self.__valid__.from_orm(item).dict() for item in items]
         return validated_items
 
     def insert_item(self, **kwargs) -> Optional[T] | dict:
+        """
+        :param kwargs: all keywords which have to be implemented to new object
+        :return: validated new object
+        """
+        # validate input rows with pydantic model
         try:
             new_item: BaseModel = self.__valid__(**kwargs)
-        except TypeError as e:
+        except (TypeError, ValidationError) as e:
             return {'Exception': e}
 
         new_object: Optional[T] = self.__model__(**new_item.dict())
@@ -72,14 +82,10 @@ class BaseDAO(Generic[T]):
 
         return new_object
 
+    @dao_exceptions
     def update_item_by_pk(self, pk: int, **kwargs) -> Optional[T] | dict:
-        try:
-            update_item: BaseModel = self.__valid__(**kwargs)
-        except TypeError as e:
-            return {'Exception': e}
-
         update_object: Optional[T] = self._db_session.query(self.__model__).get(pk)
-        for k, v in update_item.dict().items():
+        for k, v in kwargs.items():
             setattr(update_object, k, v)
 
         with self._db_session.begin():
@@ -88,6 +94,7 @@ class BaseDAO(Generic[T]):
 
         return update_object
 
+    @dao_exceptions
     def delete_item_by_pk(self, pk: int) -> Optional[T]:
         delete_item: Optional[T] = self._db_session.query(self.__model__).get(pk)
 

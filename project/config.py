@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Type
 from project.utils import read_json_file
+from datetime import timedelta
 
 
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
@@ -18,7 +19,7 @@ class BaseConfig(object):
     ITEMS_PER_PAGE = 12
 
     # os
-    SECRET_KEY = os.urandom(12)
+    SECRET_KEY = b'm=+Y(L1!idBB'
 
     # json
     RESTX_JSON = {'ensure_ascii': False}
@@ -27,6 +28,10 @@ class BaseConfig(object):
 
     # SQLAlchemy
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # token lifetime
+    ACCESS_TOKEN_LIFETIME = timedelta(minutes=30)
+    REFRESH_TOKEN_LIFETIME = timedelta(days=30)
 
 
 class TestConfig(BaseConfig):

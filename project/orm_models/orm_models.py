@@ -45,9 +45,12 @@ class User(BaseORM):
     password = Column(VARCHAR(255), nullable=False)
     first_name = Column(VARCHAR(100), nullable=False)
     last_name = Column(VARCHAR(100), nullable=False)
-    favorite_genre = Column(VARCHAR(100))
+    favorite_genre = Column(Integer, nullable=True)
+
+    genre = relationship("Genre")
 
     __table_args__ = (
+        ForeignKeyConstraint((favorite_genre,), (Genre.id,), onupdate='CASCADE', ondelete='CASCADE'),
         CheckConstraint("email LIKE '%___@___%.__%'"),
     )
 
@@ -57,6 +60,9 @@ class UserFavorites(BaseORM):
 
     user_id = Column(Integer, nullable=False)
     movie_id = Column(Integer, nullable=False)
+
+    user = relationship("User")
+    movie = relationship("Movie")
 
     __table_args__ = (
         ForeignKeyConstraint((user_id,), (User.id,), onupdate='CASCADE', ondelete='CASCADE'),
