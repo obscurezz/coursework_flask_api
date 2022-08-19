@@ -1,7 +1,7 @@
 from pydantic import EmailStr, ValidationError
 
 from project.dao.main_dao import UserDAO
-from project.exceptions import ItemNotFound
+from project.exceptions import ItemNotFound, PasswordError
 from project.models import UserModel
 from project.orm_models import User
 
@@ -72,7 +72,7 @@ class UserService:
             new_hashpwd = generate_password_hash(new_password)
             # if user password equals to previous one returns fail message
             if current_user['password'] == new_hashpwd:
-                return {'operation': 'failed', 'message': 'password is the same with previous one'}
+                raise PasswordError('Password is the same to the previous one')
             self.dao.update_item_password(pk, new_hashpwd)
             return {'operation': 'success', 'id': current_user['id'], 'info': 'password changed'}
-        return {'operation': 'failed'}
+        raise PasswordError('Incorrect password')
