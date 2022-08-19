@@ -15,12 +15,12 @@ class SingleUserView(Resource):
     @users_ns.response(401, 'Not authorized', error)
     @users_ns.marshal_with(user_profile, code=200, description='OK')
     @auth_required
-    def get(username):
+    def get(email):
         """
-        :param username: is an email from token
+        :param email: is an email from token
         returns user info for authorized user
         """
-        user: dict = user_service.get_user_by_email_and_password(email=username)
+        user: dict = user_service.get_user_by_email_and_password(email=email)
         return user, 200
 
     @staticmethod
@@ -29,12 +29,12 @@ class SingleUserView(Resource):
     @users_ns.response(404, 'Not found', error)
     @users_ns.response(401, 'Not authorized', error)
     @auth_required
-    def patch(username):
+    def patch(email):
         """
-        :param username: is an email from token
+        :param email: is an email from token
         updates user info for authorized user
         """
-        user: dict = user_service.get_user_by_email_and_password(email=username)
+        user: dict = user_service.get_user_by_email_and_password(email=email)
         pk = user['id']
 
         user_service.patch_user_by_id(pk, **update_user_parser.parse_args())
@@ -49,12 +49,12 @@ class PasswordUserView(Resource):
     @users_ns.response(404, 'Not found', error)
     @users_ns.response(401, 'Not authorized', error)
     @auth_required
-    def put(username):
+    def put(email):
         """
-        :param username: is an email from token
+        :param email: is an email from token
         changes user password for authorized user
         """
-        user: dict = user_service.get_user_by_email_and_password(email=username)
+        user: dict = user_service.get_user_by_email_and_password(email=email)
         pk = user['id']
 
         user_service.put_user_new_password(pk, **change_password_parser.parse_args())

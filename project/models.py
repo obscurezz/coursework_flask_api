@@ -62,3 +62,8 @@ class UserFavoritesModel(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ErrorModel(BaseModel):
+    error: str
+    message: str

@@ -34,9 +34,10 @@ class UserService:
         raise ItemNotFound('No such user in database')
 
     def patch_user_by_id(self, pk: int, first_name: str, last_name: str, favorite_genre: str | None = None):
-        user: User = self.dao.update_item_by_pk(pk, first_name=first_name, last_name=last_name,
-                                                favorite_genre=favorite_genre)
-        return user
+        if user := self.dao.update_item_by_pk(pk, first_name=first_name, last_name=last_name,
+                                                favorite_genre=favorite_genre):
+            return user
+        raise ItemNotFound('No such user in database')
 
     def post_new_user(self, email: EmailStr, password: str, first_name: str, last_name: str):
         """

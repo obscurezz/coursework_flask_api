@@ -3,6 +3,7 @@ from typing import Type
 from project.dao.base_dao import BaseDAO
 from project.models import MovieModel, GenreModel, DirectorModel, UserModel, BaseModel, UserFavoritesModel
 from project.orm_models import Movie, Genre, Director, User, UserFavorites
+from project.tools.decorators import dao_exceptions
 
 
 class MovieDAO(BaseDAO[Movie]):
@@ -34,6 +35,7 @@ class UserDAO(BaseDAO[User]):
     __model__: Type[User] = User
     __valid__: Type[BaseModel] = UserModel
 
+    @dao_exceptions
     def select_item_by_pk(self, pk: int) -> dict:
         selected_user: User = self._db_session.query(self.__model__).get(pk)
         self._db_session.close()
@@ -41,6 +43,7 @@ class UserDAO(BaseDAO[User]):
 
         return validated_user
 
+    @dao_exceptions
     def select_unique_item_by_arguments(self, **kwargs) -> dict:
         """
         Implements method of finding exact user by its email and password in database
@@ -52,7 +55,8 @@ class UserDAO(BaseDAO[User]):
         validated_user: dict = self.__valid__.from_orm(selected_user).dict()
         return validated_user
 
-    def update_item_password(self, pk: int, new_password: str) -> dict:
+    @dao_exceptions
+    def update_item_password(self, pk: int, new_password: str) -> dict | None:
         """
         :param pk: id of user
         :param new_password: new password
@@ -73,7 +77,8 @@ class FavoriteDAO(BaseDAO[UserFavorites]):
     __model__: Type[UserFavorites] = UserFavorites
     __valid__: Type[UserFavoritesModel] = UserFavoritesModel
 
-    def select_unique_item_id_by_arguments(self, **kwargs) -> int:
+    @dao_exceptions
+    def select_unique_item_id_by_arguments(self, **kwargs) -> int | None:
         """
         :param kwargs: user_id, movie_id
         :return: id of favorite object in database
