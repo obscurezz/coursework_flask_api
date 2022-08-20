@@ -26,7 +26,7 @@ class AuthService:
         result_token = jwt.encode(data, current_app.config['SECRET_KEY'], algorithm='HS256')
         return result_token
 
-    def _generate_tokens(self, email: str, password: str | None, is_refresh: bool = False) -> dict:
+    def _generate_tokens(self, email: str, password: str | None, is_refresh: bool = False) -> TokenModel:
         """
         Generates JWT tokens for user authorization
         :param email: user's email
@@ -44,8 +44,8 @@ class AuthService:
                 abort(400)
 
         data = {
-            'email': user['email'],
-            'password': user['password']
+            'id': user['id'],
+            'email': user['email']
         }
 
         access_token = self._create_token(current_app.config['ACCESS_TOKEN_LIFETIME'], data)
@@ -53,10 +53,10 @@ class AuthService:
         # validate tokens
         tokens = TokenModel(access_token=access_token, refresh_token=refresh_token)
 
-        return tokens.dict()
+        return tokens
 
-    def _approve_refresh_token(self, refresh_token: str) -> dict:
+    def _approve_refresh_token(self, refresh_token: str) -> TokenModel:
         data = jwt.decode(refresh_token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-        username = data.get('username')
+        email = data.get('email')
 
-        return self._generate_tokens(username, None, is_refresh=True)
+        return self._generate_tokens(email, None, is_refresh=True)

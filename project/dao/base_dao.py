@@ -1,8 +1,7 @@
 from typing import Generic, Optional, TypeVar, Type
 
-from flask import current_app
+from flask import current_app, g
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy.orm import scoped_session
 from werkzeug.exceptions import NotFound
 from pydantic import ValidationError
 
@@ -21,8 +20,11 @@ class BaseDAO(Generic[T]):
     __model__: Type[BaseORM] = BaseORM
     __valid__: Type[BaseModel] = BaseModel
 
-    def __init__(self, db_session: scoped_session) -> None:
-        self._db_session = db_session
+    @property
+    def _db_session(self):
+        if db_session := getattr(g, 'session'):
+            return db_session
+        raise RuntimeError('Session does not set')
 
     @property
     def _items_per_page(self) -> int:
@@ -31,7 +33,6 @@ class BaseDAO(Generic[T]):
     @dao_exceptions
     def select_item_by_pk(self, pk: int) -> dict | None:
         item: Optional[T] = self._db_session.query(self.__model__).get(pk)
-        self._db_session.close()
         validated_item: dict = self.__valid__.from_orm(item).dict()
         return validated_item
 
@@ -58,7 +59,6 @@ class BaseDAO(Generic[T]):
                 return []
         # list of all ORM objects
         items: list[Optional[T]] = stmt.all()
-        self._db_session.close()
         # validate them with pydantic model
         validated_items: list[dict] = [self.__valid__.from_orm(item).dict() for item in items]
         return validated_items
@@ -76,9 +76,8 @@ class BaseDAO(Generic[T]):
 
         new_object: Optional[T] = self.__model__(**new_item.dict())
 
-        with self._db_session.begin():
-            self._db_session.add(new_object)
-            self._db_session.commit()
+        self._db_session.add(new_object)
+        self._db_session.commit()
 
         return new_object
 
@@ -88,9 +87,8 @@ class BaseDAO(Generic[T]):
         for k, v in kwargs.items():
             setattr(update_object, k, v)
 
-        with self._db_session.begin():
-            self._db_session.add(update_object)
-            self._db_session.commit()
+        self._db_session.add(update_object)
+        self._db_session.commit()
 
         return update_object
 
@@ -98,8 +96,7 @@ class BaseDAO(Generic[T]):
     def delete_item_by_pk(self, pk: int) -> Optional[T]:
         delete_item: Optional[T] = self._db_session.query(self.__model__).get(pk)
 
-        with self._db_session.begin():
-            self._db_session.delete(delete_item)
-            self._db_session.commit()
+        self._db_session.delete(delete_item)
+        self._db_session.commit()
 
         return delete_item

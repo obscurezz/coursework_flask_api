@@ -16,7 +16,6 @@ class MovieDAO(BaseDAO[Movie]):
         :return: list of validated movies by parameters
         """
         stmt: list[Movie] = self._db_session.query(self.__model__).filter_by(**kwargs).all()
-        self._db_session.close()
         validated_items: list = [self.__valid__.from_orm(item) for item in stmt]
         return validated_items
 
@@ -38,7 +37,6 @@ class UserDAO(BaseDAO[User]):
     @dao_exceptions
     def select_item_by_pk(self, pk: int) -> dict:
         selected_user: User = self._db_session.query(self.__model__).get(pk)
-        self._db_session.close()
         validated_user: dict = self.__valid__.from_orm(selected_user).dict()
 
         return validated_user
@@ -51,7 +49,6 @@ class UserDAO(BaseDAO[User]):
         :return: exact user as validated dictionary
         """
         selected_user: User = self._db_session.query(self.__model__).filter_by(**kwargs).one()
-        self._db_session.close()
         validated_user: dict = self.__valid__.from_orm(selected_user).dict()
         return validated_user
 
@@ -63,11 +60,9 @@ class UserDAO(BaseDAO[User]):
         :return: exact user as validated dictionary with new password
         """
         current_user: User = self._db_session.query(self.__model__).get(pk)
-        self._db_session.close()
         current_user.password = new_password
-        with self._db_session.begin():
-            self._db_session.add(current_user)
-            self._db_session.commit()
+        self._db_session.add(current_user)
+        self._db_session.commit()
 
         validated_user: dict = self.__valid__.from_orm(current_user).dict()
         return validated_user
@@ -84,6 +79,5 @@ class FavoriteDAO(BaseDAO[UserFavorites]):
         :return: id of favorite object in database
         """
         selected_favorite: UserFavorites = self._db_session.query(self.__model__).filter_by(**kwargs).one()
-        self._db_session.close()
         validated_favorite: dict = self.__valid__.from_orm(selected_favorite).dict()
         return validated_favorite['id']

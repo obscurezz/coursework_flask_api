@@ -1,6 +1,6 @@
 from typing import Type
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, g
 from flask_cors import CORS
 
 from project.exceptions import BaseServiceError
@@ -33,5 +33,15 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
 
     # error handler
     app.register_error_handler(BaseServiceError, base_service_error_handler)
+
+    @app.before_request
+    def create_session(*args, **kwargs):
+        g.session = db.session
+
+    @app.after_request
+    def close_session(response):
+        if getattr(g, 'session'):
+            g.session.close()
+        return response
 
     return app
