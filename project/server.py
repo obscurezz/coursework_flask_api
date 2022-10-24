@@ -34,15 +34,8 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
     # error handler
     app.register_error_handler(BaseServiceError, base_service_error_handler)
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
     @app.before_request
     def create_session():
-=======
-    @app.before_request
-    def create_session(*args, **kwargs):
->>>>>>> 26f925f11a0564da45a75ce290074ff88bbd73f6
         g.session = db.session
 
     @app.after_request
@@ -51,8 +44,4 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
             g.session.close()
         return response
 
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> 26f925f11a0564da45a75ce290074ff88bbd73f6
     return app
