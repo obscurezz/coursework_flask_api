@@ -1,0 +1,5 @@
+{
+    "PWD_SALT": "ef64874e",
+    "PWD_HASH_NAME": "sha256",
+    "PWD_HASH_ITERATIONS": 3
+}

@@ -25,4 +25,17 @@ def create_app(config_object: Type[BaseConfig]) -> Flask:
     # error handler
     app.register_error_handler(BaseServiceError, base_service_error_handler)
 
+<<<<<<< Updated upstream
+=======
+    @app.before_request
+    def create_session():
+        g.session = db.session
+
+    @app.after_request
+    def close_session(response):
+        if getattr(g, 'session'):
+            g.session.close()
+        return response
+
+>>>>>>> Stashed changes
     return app

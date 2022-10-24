@@ -45,10 +45,10 @@ class ProdConfig(BaseConfig):
     # Prod
     DEBUG = False
     ENV = 'production'
-    PORT = 8080
+    PORT = 80
 
     # SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + BASE_DIR.joinpath('prod_project.db').as_posix()
+    SQLALCHEMY_DATABASE_URI = "postgresql://$DB_USER:$DB_PASSWORD@$DB_SERVER:5432/$DB_NAME"
 
 
 class ConfigFactory:
