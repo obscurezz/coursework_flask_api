@@ -17,4 +17,6 @@ ENV FLASK_ENV=development
 RUN python3 create_tables.py
 RUN python3 load_fixtures.py
 
+RUN python3 -m pylint project
+
 CMD flask run --host=0.0.0.0 --port=80
