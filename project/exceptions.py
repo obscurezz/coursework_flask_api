@@ -4,3 +4,7 @@ class BaseServiceError(Exception):
 
 class ItemNotFound(BaseServiceError):
     code = 404
+
+
+class PasswordError(BaseServiceError):
+    code = 401

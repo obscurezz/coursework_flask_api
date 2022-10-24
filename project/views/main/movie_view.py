@@ -1,11 +1,8 @@
 from flask_restx import Resource, Namespace
-from flask import request
-
-from project.orm_models import Movie
 
 from project.container import movie_service
-from project.models import MovieModel
-
+from project.setup.api.models import error, movie
+from project.setup.api.parsers import movie_status_and_page_parser
 
 movies_ns: Namespace = Namespace('movies', description='namespace for movies')
 
@@ -16,15 +13,16 @@ class AllMoviesView(Resource):
     GET: implements GET-method for /movies
     POST: implements POST-method to add new object to database (isn't done yet)
     """
+
     @staticmethod
+    @movies_ns.expect(movie_status_and_page_parser)
+    @movies_ns.marshal_with(movie, as_list=True, code=200, description='OK')
     def get():
-        page: int = int(request.args.get('page'))
-        status: str = request.args.get('status')
-
-        all_movies: list[Movie] = movie_service.get_all_movies(page=page, status=status)
-        validated_movies: list[dict] = [MovieModel.from_orm(movie).dict() for movie in all_movies]
-
-        return validated_movies, 200
+        """
+        all movies with pagination
+        """
+        all_movies: list[dict] = movie_service.get_all_movies(**movie_status_and_page_parser.parse_args())
+        return all_movies, 200
 
 
 @movies_ns.route('/<int:movie_id>')
@@ -34,10 +32,13 @@ class SingleMovieView(Resource):
     PUT: implements PUT-method to fully update object in database (isn't done yet)
     DELETE: implements DELETE-method to delete object from database (isn't done yet)
     """
+
     @staticmethod
+    @movies_ns.response(404, 'Not found', error)
+    @movies_ns.marshal_with(movie, code=200, description='OK')
     def get(movie_id: int):
-        current_movie: Movie = movie_service.get_movie_by_id(movie_id)
-        validated_movie: dict = MovieModel.from_orm(current_movie).dict()
-
-        return validated_movie, 200
-
+        """
+        exact movie by its id
+        """
+        current_movie: dict = movie_service.get_movie_by_id(movie_id)
+        return current_movie, 200

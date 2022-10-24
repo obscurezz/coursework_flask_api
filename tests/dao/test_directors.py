@@ -7,8 +7,13 @@ from project.orm_models import Director
 class TestGenresDAO:
 
     @pytest.fixture
+<<<<<<< HEAD
     def directors_dao(self):
         return DirectorDAO()
+=======
+    def directors_dao(self, db):
+        return DirectorDAO(db.session)
+>>>>>>> 26f925f11a0564da45a75ce290074ff88bbd73f6
 
     @pytest.fixture
     def director_1(self, db):

@@ -1,12 +1,20 @@
-from project.dao import MovieDAO, GenreDAO, DirectorDAO
-from project.services import MovieService, GenreService, DirectorService
-from project.setup.db import db
+from project.dao import MovieDAO, GenreDAO, DirectorDAO, UserDAO, FavoriteDAO
+from project.services import MovieService, GenreService, DirectorService, UserService, AuthService, FavoriteService
 
-movie_dao = MovieDAO(db_session=db.session)
+# movies
+movie_dao = MovieDAO()
 movie_service = MovieService(dao=movie_dao)
-
-genre_dao = GenreDAO(db_session=db.session)
+# genres
+genre_dao = GenreDAO()
 genre_service = GenreService(dao=genre_dao)
-
-director_dao = DirectorDAO(db_session=db.session)
+# directors
+director_dao = DirectorDAO()
 director_service = DirectorService(dao=director_dao)
+# users
+user_dao = UserDAO()
+user_service = UserService(dao=user_dao)
+# authorization
+auth_service = AuthService(user_service=user_service)
+# favorites
+favorite_dao = FavoriteDAO()
+favorite_service = FavoriteService(dao=favorite_dao)

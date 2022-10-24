@@ -33,8 +33,14 @@ tomlkit==0.11.3
 typing_extensions==4.3.0
 Werkzeug==2.1.2
 wrapt==1.14.1
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 pytest~=7.1.2
 PyJWT~=2.4.0
 >>>>>>> Stashed changes
+=======
+
+pytest~=7.1.2
+PyJWT~=2.4.0
+>>>>>>> 26f925f11a0564da45a75ce290074ff88bbd73f6

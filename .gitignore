@@ -60,3 +60,6 @@ target/
 
 #database
 dev_project.db
+
+#security
+security.json
